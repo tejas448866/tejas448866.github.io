@@ -16,18 +16,21 @@ Write-Host "==================================================" -ForegroundColor
 & $git -C $dir remote add origin $url
 & $git -C $dir branch -M main
 
-Write-Host "`nExecuting: git push -u origin main..." -ForegroundColor Yellow
-& $git -C $dir push -u origin main
+Write-Host "`nStaging all files..." -ForegroundColor Yellow
+& $git -C $dir add -A
+& $git -C $dir commit -m "Deploy complete cinematic portfolio to GitHub Pages" 2>$null
+
+Write-Host "`nExecuting: git push origin main --force..." -ForegroundColor Yellow
+& $git -C $dir push origin main --force
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "`n[SUCCESS] Portfolio successfully pushed to GitHub!" -ForegroundColor Green
-    Write-Host "Live Repository: https://github.com/tejas448866/$RepoName" -ForegroundColor Green
-    Write-Host "Live Website URL: https://tejas448866.github.io/" -ForegroundColor Green
+    Write-Host "`n==================================================" -ForegroundColor Green
+    Write-Host " [SUCCESS] Portfolio successfully pushed to GitHub!" -ForegroundColor Green
+    Write-Host " Live Repository: https://github.com/tejas448866/$RepoName" -ForegroundColor Green
+    Write-Host " Live Website:    https://tejas448866.github.io/" -ForegroundColor Green
+    Write-Host "==================================================" -ForegroundColor Green
+    Write-Host "`n(Wait 30-60 seconds for GitHub to update the site, then refresh your browser!)" -ForegroundColor White
 } else {
-    Write-Host "`n[NOTE] If this repository is not created yet on GitHub:" -ForegroundColor Yellow
-    Write-Host "1. Go to: https://github.com/new" -ForegroundColor White
-    Write-Host "2. Repository name: $RepoName" -ForegroundColor White
-    Write-Host "3. Leave 'Initialize with README' UNCHECKED" -ForegroundColor White
-    Write-Host "4. Click 'Create repository'" -ForegroundColor White
-    Write-Host "5. Double-click push_to_github.bat again!" -ForegroundColor White
+    Write-Host "`n[ERROR] Push failed with exit code $LASTEXITCODE." -ForegroundColor Red
+    Write-Host "Please check that your GitHub repository exists at https://github.com/tejas448866/$RepoName" -ForegroundColor Yellow
 }
